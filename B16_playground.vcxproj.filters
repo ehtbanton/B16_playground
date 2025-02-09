@@ -26,10 +26,22 @@
     <ClInclude Include="src\sheet_a\a_2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sheet_a\a_3-4.hpp">
+    <ClInclude Include="src\sheet_a\a_3,4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sheet_a\a_5.hpp">
+    <ClInclude Include="src\sheet_a\a_5,6.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sheet_a\a_7.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sheet_a\a_8.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sheet_a\a_9.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sheet_a\a_10.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

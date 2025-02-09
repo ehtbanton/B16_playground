@@ -16,6 +16,12 @@ methods like move() and stop() from the parent class.
 
 Question 4
 See below.
+
+Class Mass contains the mass, position, velocity and acceleration of a physical mass object. It has a method update_mass().
+Class Spring contains the spring constant, rest length and damping constant of a physical spring object. It has a method force_exerted().
+Classes Mass and Spring are implemented INDEPENDENTLY of each other. They are then gathered in the World class.
+The World class has a method update() which calculates the spring force and updates the masses' positions. It also has getters for the positions.
+
 */
 
 
@@ -118,6 +124,7 @@ public:
 };
 
 
+
 // For visualisation...
 void render_line(double pos1, double pos2, int width = 100) {
 	// Scale positions to fit the terminal width
@@ -145,6 +152,11 @@ void render_line(double pos1, double pos2, int width = 100) {
 	std::cout << "\033[2J\033[H";  // Clear screen
 	std::cout << line << '\n';
 }
+
+
+
+
+
 
 inline void q4_mass_spring_sim() {
 	// Create world with two masses and a spring
