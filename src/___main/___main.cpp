@@ -21,7 +21,7 @@ int main()
 	// See a_3-4.hpp
 
 	// Q4
-	//q4_mass_spring_sim(); // nice sim :)
+	q4_mass_spring_sim(); // nice sim :)
 
 	// Q5-Q8
 	// See other headers
@@ -31,7 +31,7 @@ int main()
 
 	// Q10
 	//q10_example_main();
-	q10_sum_tan_main();
+	//q10_sum_tan_main();
 
 	return 0;
 }
