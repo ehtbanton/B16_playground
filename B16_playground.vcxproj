@@ -133,6 +133,7 @@
     <ClCompile Include="src\___main\___main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\sheet_b\b_1,2.hpp" />
     <ClInclude Include="src\sheet_a\a_10.hpp" />
     <ClInclude Include="src\sheet_a\a_2.hpp" />
     <ClInclude Include="src\sheet_a\a_3,4.hpp" />
@@ -140,6 +141,8 @@
     <ClInclude Include="src\sheet_a\a_7.hpp" />
     <ClInclude Include="src\sheet_a\a_8.hpp" />
     <ClInclude Include="src\sheet_a\a_9.hpp" />
+    <ClInclude Include="src\sheet_b\b_3,4.hpp" />
+    <ClInclude Include="src\sheet_b\b_5.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
