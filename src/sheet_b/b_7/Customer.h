@@ -10,10 +10,11 @@ private:
 
 public:
     Customer(int id, double x, double y);
+
     bool canPlaceOrder() const;
     void incrementOrderCount();
     void decrementOrderCount();
     int getOrderCount() const;
 };
 
-#endif // CUSTOMER_H
+#endif

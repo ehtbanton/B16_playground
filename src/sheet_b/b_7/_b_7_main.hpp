@@ -47,28 +47,11 @@ Class set map:
 
 */
 
-
-#include <iostream>
-#include <cassert>
-#include "Location.h"
-
-void testLocation() {
-    // Test constructor and getters
-    Location loc(1, 0.5, 0.5);
-    assert(loc.getId() == 1);
-    assert(loc.getX() == 0.5);
-    assert(loc.getY() == 0.5);
-
-    // Test setCoordinates
-    loc.setCoordinates(0.7, 0.3);
-    assert(loc.getX() == 0.7);
-    assert(loc.getY() == 0.3);
-
-    std::cout << "Location tests passed!\n";
+#include "Tests.h"
+void b7_test() {
+	Tests::runAllTests();
 }
 
-int b7_test_main() {
-    testLocation();
-    std::cout << "All tests passed!\n";
-    return 0;
+void b7_run_delivery_system() {
+	
 }

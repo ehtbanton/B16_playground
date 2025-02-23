@@ -8,7 +8,6 @@
 class Store : public Location {
 private:
     std::vector<Robot*> robotFleet;
-    // Could add inventory management here if needed
 
 public:
     Store(int id, double x, double y);
@@ -18,4 +17,4 @@ public:
     std::vector<Robot*>& getRobotFleet();
 };
 
-#endif // STORE_H
+#endif

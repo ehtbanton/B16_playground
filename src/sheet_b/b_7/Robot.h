@@ -11,6 +11,7 @@ private:
 
 public:
     Robot();
+
     bool loadBaskets(int count);
     bool deliver(Location* destination);
     int getCurrentLoad() const;
@@ -18,4 +19,4 @@ public:
     void setCurrentLocation(Location* location);
 };
 
-#endif // ROBOT_H
+#endif
