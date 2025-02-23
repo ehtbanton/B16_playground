@@ -17,4 +17,4 @@ public:
     void setCoordinates(double x, double y);
 };
 
-#endif // LOCATION_H
+#endif

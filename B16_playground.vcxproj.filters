@@ -24,6 +24,9 @@
     <ClCompile Include="src\sheet_b\b_7\Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\sheet_b\b_7\Location.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sheet_a\a_2.hpp">
@@ -56,9 +59,6 @@
     <ClInclude Include="src\sheet_b\b_5.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sheet_b\b_7\_b_7_main.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\sheet_b\b_6.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -83,10 +83,7 @@
     <ClInclude Include="src\sheet_b\b_7\DeliverySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sheet_b\b_7\Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sheet_b\b_7\Utilities.h">
+    <ClInclude Include="src\sheet_b\b_7\_b_7_main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

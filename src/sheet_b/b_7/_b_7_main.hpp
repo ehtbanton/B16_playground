@@ -37,19 +37,38 @@ Class set map:
 │   ├── basketCount
 │   └── status
 │
-├── DeliverySystem.h/cpp (Main Controller)
-│    ├── Has: Store
-│    ├── Has: Customers
-│    ├── Has: Map
-│    ├── Has: Robots
-│    └── Has: Orders
-│
-├── Constants.h
-│	├── MAX_DISTANCE (1.0)
-│	├── MAX_CUSTOMERS (10)
-│	├── MAX_BASKETS_PER_CUSTOMER (2)
-│	└── ROBOT_BASKET_CAPACITY (3)
-│
-└── Utilities.h
+└── DeliverySystem.h/cpp (Main Controller)
+    ├── Has: Store
+    ├── Has: Customers
+    ├── Has: Map
+    ├── Has: Robots
+    └── Has: Orders
+
 
 */
+
+
+#include <iostream>
+#include <cassert>
+#include "Location.h"
+
+void testLocation() {
+    // Test constructor and getters
+    Location loc(1, 0.5, 0.5);
+    assert(loc.getId() == 1);
+    assert(loc.getX() == 0.5);
+    assert(loc.getY() == 0.5);
+
+    // Test setCoordinates
+    loc.setCoordinates(0.7, 0.3);
+    assert(loc.getX() == 0.7);
+    assert(loc.getY() == 0.3);
+
+    std::cout << "Location tests passed!\n";
+}
+
+int b7_test_main() {
+    testLocation();
+    std::cout << "All tests passed!\n";
+    return 0;
+}

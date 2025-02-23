@@ -9,6 +9,7 @@
 #include "Store.h"
 #include "Customer.h"
 
+
 class Map {
 private:
     std::vector<std::vector<double>> distances;  // Adjacency matrix
