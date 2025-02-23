@@ -3,12 +3,9 @@
 
 #include <vector>
 #include <random>
-#include <functional>
-#include <algorithm>
 #include "Location.h"
 #include "Store.h"
 #include "Customer.h"
-
 
 class Map {
 private:
@@ -16,18 +13,23 @@ private:
     std::vector<Location*> nodes;
     const double MAX_DISTANCE = 1.0;  // 1km maximum
 
+    // Private utility functions
+    bool isConnected() const;  // Checks if graph is connected
+    void dfs(int node, std::vector<bool>& visited) const;
+
 public:
     Map();
     ~Map();
 
-    // Main functions
     void initializeMap(Store* store, std::vector<Customer*>& customers);
-    bool verifyConnectivity();
-
-    // Utility functions
-    double getDistance(int from, int to) const;
+    double getDistance(int fromId, int toId) const;
+    std::vector<int> findShortestPath(int fromId, int toId) const;
+    Location* getLocation(int id) const;
     int getNumNodes() const;
-    Location* getNode(int index) const;
+
+    // For testing/verification
+    bool verifyConnectivity() const;
+    bool verifyDistances() const;  // Ensures no distance > 1km
 };
 
-#endif // MAP_H
+#endif

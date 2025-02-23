@@ -9,6 +9,7 @@
 #include "Customer.h"
 #include "Robot.h"
 #include "Order.h"
+#include "Map.h"
 
 class Tests {
 public:
@@ -111,12 +112,44 @@ public:
         std::cout << "Order tests passed!\n";
     }
 
+    static void testMap() {
+        // Create a store and some customers
+        Store* store = new Store(0, 0.0, 0.0);
+        std::vector<Customer*> customers;
+        for (int i = 1; i <= 5; i++) {
+            customers.push_back(new Customer(i, 0.1 * i, 0.1 * i));
+        }
+
+        Map map;
+        map.initializeMap(store, customers);
+
+        // Test basic properties
+        assert(map.getNumNodes() == 6);  // Store + 5 customers
+        assert(map.verifyConnectivity());  // Graph should be connected
+
+        // Test pathfinding
+        std::vector<int> path = map.findShortestPath(0, 5);  // From store to last customer
+        assert(!path.empty());  // Should find a path
+        assert(path[0] == 0);   // Should start at store
+        assert(path.back() == 5);  // Should end at customer 5
+
+        // Clean up
+        delete store;
+        for (auto customer : customers) {
+            delete customer;
+        }
+
+        std::cout << "Map tests passed!\n";
+    }
+
+
     static void runAllTests() {
         testLocation();
         testCustomer();
         testStore();
         testRobot();
         testOrder();
+		testMap();
         std::cout << "\nAll tests passed!\n";
     }
 };
