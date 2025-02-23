@@ -47,6 +47,8 @@ int main()
 	// B1
 	//b1_example_main();
 
+	// B2, B3, B4
+	// See b_1,2.hpp and b_3,4.hpp
 
 	// B5
 	//b5_example_main();
