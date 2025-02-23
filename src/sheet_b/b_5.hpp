@@ -12,7 +12,8 @@ We repeat this process until we find the target value or until the subarray has 
 
 */
 
-
+#include <iostream>
+using namespace std;
 
 template <typename T>
 
@@ -33,3 +34,20 @@ T binary_search(T arr[], int size, T target) {
 	}
 	return -1;
 }
+
+void b5_example_main() {
+	double arr[] = {1,1,2,3,5,8,13};
+	int size = sizeof(arr) / sizeof(arr[0]);
+	double target = 5; // must be same type as array
+	int result = binary_search(arr, size, target);
+	if (result == -1) {
+		cout << "Element not found" << endl;
+	}
+	else {
+		cout << "Element found at index " << result << endl;
+	}
+}
+
+// To make this use a double instead of unsigned char, I would just change the type of the vector to double and the type of the pixel values to double.
+// I would also change the set_pixel function to take a double instead of an unsigned char.
+// I would also change the display_image function to print out somethign which refers to doubles instead of unsigned chars.
