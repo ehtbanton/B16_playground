@@ -15,6 +15,7 @@ public:
     bool loadBaskets(int count);
     bool deliver(Location* destination);
     int getCurrentLoad() const;
+    static int getBasketCapacity() { return BASKET_CAPACITY; }
     Location* getCurrentLocation() const;
     void setCurrentLocation(Location* location);
 };

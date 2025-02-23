@@ -10,6 +10,7 @@
 #include "Robot.h"
 #include "Order.h"
 #include "Map.h"
+#include "DeliverySystem.h"
 
 class Tests {
 public:
@@ -142,6 +143,56 @@ public:
         std::cout << "Map tests passed!\n";
     }
 
+    static void testDeliverySystem() {
+        // Create store and delivery system
+        Store* store = new Store(0, 0.0, 0.0);
+
+        // Add multiple robots to handle the deliveries
+        for (int i = 0; i < 3; i++) {  // Add 3 robots to ensure enough capacity
+            Robot* robot = new Robot();
+            store->addRobot(robot);
+        }
+
+        DeliverySystem system(store);
+
+        // Add customers (limit to 2 for testing)
+        Customer* cust1 = new Customer(1, 0.1, 0.1);
+        Customer* cust2 = new Customer(2, 0.2, 0.2);
+
+        assert(system.addCustomer(cust1));
+        assert(system.addCustomer(cust2));
+
+        // Add orders that don't exceed robot capacity
+        Order* order1 = new Order(1, 1);  // 1 basket for customer 1
+        Order* order2 = new Order(2, 1);  // 1 basket for customer 2
+
+        assert(system.addOrder(order1));
+        assert(system.addOrder(order2));
+
+        // Plan deliveries
+        bool success = system.planDeliveries();
+        assert(success);
+
+        // Verify plans
+        auto plans = system.getDeliveryPlans();
+        assert(!plans.empty());
+
+        if (!plans.empty()) {
+            assert(!plans[0].orders.empty());
+            assert(!plans[0].route.empty());
+        }
+
+        // Clean up
+        delete store;  // Will delete robots
+        delete cust1;
+        delete cust2;
+
+        std::cout << "DeliverySystem tests passed!\n";
+    }
+
+
+
+
 
     static void runAllTests() {
         testLocation();
@@ -150,6 +201,7 @@ public:
         testRobot();
         testOrder();
 		testMap();
+		testDeliverySystem();
         std::cout << "\nAll tests passed!\n";
     }
 };

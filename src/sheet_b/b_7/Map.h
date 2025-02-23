@@ -13,9 +13,9 @@ private:
     std::vector<Location*> nodes;
     const double MAX_DISTANCE = 1.0;  // 1km maximum
 
-    // Private utility functions
-    bool isConnected() const;  // Checks if graph is connected
+    // Private utility function
     void dfs(int node, std::vector<bool>& visited) const;
+    int findNodeIndex(int id) const;  // Helper to find node index from ID
 
 public:
     Map();
@@ -26,10 +26,7 @@ public:
     std::vector<int> findShortestPath(int fromId, int toId) const;
     Location* getLocation(int id) const;
     int getNumNodes() const;
-
-    // For testing/verification
     bool verifyConnectivity() const;
-    bool verifyDistances() const;  // Ensures no distance > 1km
 };
 
 #endif

@@ -39,6 +39,9 @@
     <ClCompile Include="src\sheet_b\b_7\Order.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\sheet_b\b_7\DeliverySystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sheet_a\a_2.hpp">

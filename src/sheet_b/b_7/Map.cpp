@@ -13,56 +13,42 @@ Map::~Map() {
 
 void Map::initializeMap(Store* store, std::vector<Customer*>& customers) {
     nodes.clear();
+    distances.clear(); // Clear existing distances
 
     // Add store and customers to nodes
-    nodes.push_back(store);
+    if (store) {
+        nodes.push_back(store);
+    }
+
     for (auto customer : customers) {
-        nodes.push_back(customer);
+        if (customer) {
+            nodes.push_back(customer);
+        }
     }
 
     int n = nodes.size();
-    distances.resize(n, std::vector<double>(n, -1));  // -1 indicates no direct connection
+    // Properly resize the distances matrix
+    distances.resize(n);
+    for (auto& row : distances) {
+        row.resize(n, -1);  // Initialize all distances to -1
+    }
 
     // Initialize random number generation
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0.1, MAX_DISTANCE);
 
-    // Connect store to about half of the customers randomly
-    int directConnections = n / 2;
-    std::vector<bool> isConnected(n, false);
-    isConnected[0] = true;  // Store is always connected
-
-    // First, connect store to some random customers
-    for (int i = 0; i < directConnections; i++) {
-        int customerIdx = (rand() % (n - 1)) + 1;
-        if (!isConnected[customerIdx]) {
-            double distance = dis(gen);
-            distances[0][customerIdx] = distance;
-            distances[customerIdx][0] = distance;
-            isConnected[customerIdx] = true;
-        }
-    }
-
-    // Connect remaining customers through other customers
+    // Connect store to all customers first to ensure base connectivity
     for (int i = 1; i < n; i++) {
-        if (!isConnected[i]) {
-            int connectedNode = -1;
-            do {
-                connectedNode = rand() % n;
-            } while (!isConnected[connectedNode] || connectedNode == i);
-
-            double distance = dis(gen);
-            distances[i][connectedNode] = distance;
-            distances[connectedNode][i] = distance;
-            isConnected[i] = true;
-        }
+        double distance = dis(gen);
+        distances[0][i] = distance;
+        distances[i][0] = distance;
     }
 
-    // Add some additional random connections
+    // Add some additional random connections between customers
     for (int i = 1; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
-            if (rand() % 3 == 0) {  // 33% chance of additional connection
+            if (rand() % 2 == 0) {  // 50% chance of connection
                 double distance = dis(gen);
                 distances[i][j] = distance;
                 distances[j][i] = distance;
@@ -72,23 +58,20 @@ void Map::initializeMap(Store* store, std::vector<Customer*>& customers) {
 }
 
 std::vector<int> Map::findShortestPath(int fromId, int toId) const {
+    if (nodes.empty()) return std::vector<int>();
+
+    int fromIdx = findNodeIndex(fromId);
+    int toIdx = findNodeIndex(toId);
+
+    if (fromIdx < 0 || toIdx < 0) return std::vector<int>();
+
     int n = nodes.size();
     std::vector<double> dist(n, std::numeric_limits<double>::infinity());
     std::vector<int> prev(n, -1);
     std::vector<bool> visited(n, false);
 
-    // Find node indices from IDs
-    int fromIdx = -1, toIdx = -1;
-    for (int i = 0; i < n; i++) {
-        if (nodes[i]->getId() == fromId) fromIdx = i;
-        if (nodes[i]->getId() == toId) toIdx = i;
-    }
-
-    if (fromIdx == -1 || toIdx == -1) return std::vector<int>();
-
     dist[fromIdx] = 0;
 
-    // Dijkstra's algorithm
     for (int i = 0; i < n; i++) {
         int u = -1;
         double minDist = std::numeric_limits<double>::infinity();
@@ -104,7 +87,7 @@ std::vector<int> Map::findShortestPath(int fromId, int toId) const {
         visited[u] = true;
 
         for (int v = 0; v < n; v++) {
-            if (distances[u][v] > 0) {  // If there's a connection
+            if (v < distances[u].size() && distances[u][v] > 0) {
                 double alt = dist[u] + distances[u][v];
                 if (alt < dist[v]) {
                     dist[v] = alt;
@@ -114,15 +97,22 @@ std::vector<int> Map::findShortestPath(int fromId, int toId) const {
         }
     }
 
-    // Reconstruct path
     std::vector<int> path;
     int current = toIdx;
-    while (current != -1) {
-        path.push_back(nodes[current]->getId());
+
+    // Prevent infinite loop if path doesn't exist
+    while (current != -1 && path.size() <= nodes.size()) {
+        if (current >= 0 && current < nodes.size() && nodes[current]) {
+            path.push_back(nodes[current]->getId());
+        }
         current = prev[current];
     }
-    std::reverse(path.begin(), path.end());
 
+    if (path.empty() || path.back() != fromId) {
+        return std::vector<int>();  // No valid path found
+    }
+
+    std::reverse(path.begin(), path.end());
     return path;
 }
 
@@ -162,4 +152,11 @@ Location* Map::getLocation(int id) const {
 
 int Map::getNumNodes() const {
     return nodes.size();
+}
+
+int Map::findNodeIndex(int id) const {
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (nodes[i] && nodes[i]->getId() == id) return i;
+    }
+    return -1;
 }
