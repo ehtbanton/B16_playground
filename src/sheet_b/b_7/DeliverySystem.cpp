@@ -35,67 +35,114 @@ bool DeliverySystem::addOrder(Order* order) {
 bool DeliverySystem::planDeliveries() {
     deliveryPlans.clear();
 
-    // Get pending orders
-    std::vector<Order*> pendingOrders;
-    for (auto order : orders) {
-        if (order && order->getStatus() == OrderStatus::PENDING) {
-            pendingOrders.push_back(order);
+    // Get pending orders and combine orders for same customer
+    std::vector<std::pair<int, int>> customerTotals;  // <customerId, total baskets>
+    for (int i = 1; i <= 10; i++) {
+        int totalBaskets = 0;
+        for (auto order : orders) {
+            if (order && order->getStatus() == OrderStatus::PENDING &&
+                order->getCustomerId() == i) {
+                totalBaskets += order->getBasketCount();
+            }
+        }
+        if (totalBaskets > 0) {
+            customerTotals.push_back(std::make_pair(i, totalBaskets));
         }
     }
 
-    if (pendingOrders.empty()) {
-        return true;  // No orders to process
-    }
+    // Create plan with robot
+    DeliveryPlan plan;
+    plan.robot = store->getRobotFleet()[0];
+    deliveryPlans.push_back(plan);
 
-    // Get available robots
-    std::vector<Robot*> availableRobots = store->getRobotFleet();
-    if (availableRobots.empty()) {
-        return false;
-    }
+    // Keep planning trips until all deliveries are made
+    while (!customerTotals.empty()) {
+        std::vector<std::pair<int, int>> tripCustomers;
+        int currentBaskets = 0;
+        int currentLoc = store->getId();
+        std::vector<int> currentRoute;
+        currentRoute.push_back(store->getId());
 
-    // Initialize plans
-    for (auto robot : availableRobots) {
-        if (robot) {
-            DeliveryPlan plan;
-            plan.robot = robot;
-            plan.route.push_back(store->getId());  // Start at store
-            deliveryPlans.push_back(plan);
+        // Keep adding closest reachable customers until basket limit
+        while (currentBaskets < 3 && !customerTotals.empty()) {
+            // Find closest reachable customer from current location
+            double shortestDist = std::numeric_limits<double>::infinity();
+            int bestCustomerIndex = -1;
+            std::vector<int> bestPath;
+
+            for (size_t i = 0; i < customerTotals.size(); i++) {
+                int customerId = customerTotals[i].first;
+                int baskets = customerTotals[i].second;
+
+                // Skip if would exceed capacity
+                if (currentBaskets + baskets > 3) continue;
+
+                // Find shortest path to this customer
+                std::vector<int> path = map->findShortestPath(currentLoc, customerId);
+                if (path.empty()) continue;
+
+                // Calculate path distance
+                double pathDist = 0;
+                for (size_t j = 0; j < path.size() - 1; j++) {
+                    pathDist += map->getDistance(path[j], path[j + 1]);
+                }
+
+                if (pathDist < shortestDist) {
+                    shortestDist = pathDist;
+                    bestCustomerIndex = i;
+                    bestPath = path;
+                }
+            }
+
+            if (bestCustomerIndex == -1) break;  // No reachable customers within capacity
+
+            // Add this customer to the trip
+            int customerId = customerTotals[bestCustomerIndex].first;
+            int baskets = customerTotals[bestCustomerIndex].second;
+            tripCustomers.push_back(std::make_pair(customerId, baskets));
+            currentBaskets += baskets;
+
+            // Add path to route (excluding starting point)
+            for (size_t i = 1; i < bestPath.size(); i++) {
+                currentRoute.push_back(bestPath[i]);
+            }
+            currentLoc = customerId;
+
+            // Remove this customer from remaining deliveries
+            customerTotals.erase(customerTotals.begin() + bestCustomerIndex);
         }
-    }
 
-    // Simple assignment: assign orders sequentially to plans
-    size_t currentPlan = 0;
-    for (auto order : pendingOrders) {
-        if (!order) continue;
-
-        bool assigned = false;
-        for (size_t i = 0; i < deliveryPlans.size(); i++) {
-            if (canAddOrderToPlan(deliveryPlans[i], order)) {
-                deliveryPlans[i].orders.push_back(order);
-                deliveryPlans[i].route.push_back(order->getCustomerId());
-                assigned = true;
-                break;
+        // Add path back to store
+        std::vector<int> returnPath = map->findShortestPath(currentLoc, store->getId());
+        if (!returnPath.empty()) {
+            for (size_t i = 1; i < returnPath.size(); i++) {
+                currentRoute.push_back(returnPath[i]);
             }
         }
 
-        if (!assigned) {
-            return false;  // Couldn't assign order
-        }
-    }
+        // Add orders for this trip to the plan
+        for (size_t i = 0; i < tripCustomers.size(); i++) {
+            int customerId = tripCustomers[i].first;
+            int basketsNeeded = tripCustomers[i].second;
 
-    // Finalize routes
-    for (auto& plan : deliveryPlans) {
-        if (!plan.route.empty()) {
-            plan.route.push_back(store->getId());  // Return to store
-        }
-    }
-
-    // Update order statuses
-    for (auto& plan : deliveryPlans) {
-        for (auto order : plan.orders) {
-            if (order) {
-                order->updateStatus(OrderStatus::IN_PROGRESS);
+            for (auto order : orders) {
+                if (order && order->getStatus() == OrderStatus::PENDING &&
+                    order->getCustomerId() == customerId && basketsNeeded > 0) {
+                    deliveryPlans.back().orders.push_back(order);
+                    order->updateStatus(OrderStatus::IN_PROGRESS);
+                    basketsNeeded -= order->getBasketCount();
+                }
             }
+        }
+
+        // Add route to plan
+        deliveryPlans.back().route = currentRoute;
+
+        // If there are more deliveries to make, start a new plan
+        if (!customerTotals.empty()) {
+            DeliveryPlan newPlan;
+            newPlan.robot = store->getRobotFleet()[0];
+            deliveryPlans.push_back(newPlan);
         }
     }
 
