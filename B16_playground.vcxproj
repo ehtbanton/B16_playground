@@ -130,7 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\sheet_a\a_1.hpp" />
-    <ClCompile Include="src\sheet_b\b_7\FileName.cpp" />
+    <ClCompile Include="src\sheet_b\b_7\Map.cpp" />
     <ClCompile Include="src\___main\___main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +144,15 @@
     <ClInclude Include="src\sheet_a\a_9.hpp" />
     <ClInclude Include="src\sheet_b\b_3,4.hpp" />
     <ClInclude Include="src\sheet_b\b_5.hpp" />
+    <ClInclude Include="src\sheet_b\b_7\Constants.h" />
+    <ClInclude Include="src\sheet_b\b_7\Customer.h" />
+    <ClInclude Include="src\sheet_b\b_7\DeliverySystem.h" />
+    <ClInclude Include="src\sheet_b\b_7\Location.h" />
+    <ClInclude Include="src\sheet_b\b_7\Map.h" />
+    <ClInclude Include="src\sheet_b\b_7\Order.h" />
+    <ClInclude Include="src\sheet_b\b_7\Robot.h" />
+    <ClInclude Include="src\sheet_b\b_7\Store.h" />
+    <ClInclude Include="src\sheet_b\b_7\Utilities.h" />
     <ClInclude Include="src\sheet_b\b_7\_b_7_main.hpp" />
     <ClInclude Include="src\sheet_b\b_6.hpp" />
   </ItemGroup>
